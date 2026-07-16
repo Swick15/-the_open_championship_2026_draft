@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Open 2026 — Draft Tracker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0b1629; color: #e8edf5; font-family: 'Georgia', serif; min-height: 100vh; }
+    header { background: linear-gradient(160deg, #0f2348 0%, #081428 100%); border-bottom: 3px solid #c8a96e; padding: 28px 20px 20px; text-align: center; position: relative; overflow: hidden; }
+    header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 120%, rgba(200,169,110,0.08) 0%, transparent 70%); pointer-events: none; }
+    header .trophy { font-size: 2rem; margin-bottom: 6px; }
+    header h1 { font-size: 1.9rem; color: #ffffff; letter-spacing: 4px; text-transform: uppercase; font-weight: normal; }
+    header h1 span { color: #c8a96e; }
+    header .subtitle { color: #7a9bbf; margin-top: 6px; font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase; }
+    .round-badge { display: inline-block; background: #c8a96e; color: #081428; padding: 4px 18px; border-radius: 20px; font-weight: bold; font-size: 0.78rem; margin-top: 14px; text-transform: uppercase; letter-spacing: 2px; }
+    .container { max-width: 980px; margin: 0 auto; padding: 28px 16px 40px; }
+    .section-title { color: #c8a96e; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #1a2e4a; }
+    .last-updated { text-align: right; color: #3a5270; font-size: 0.75rem; margin-bottom: 20px; }
+    .leaderboard { background: #0e1e38; border: 1px solid #1a2e4a; border-radius: 10px; overflow: hidden; margin-bottom: 36px; box-shadow: 0 4px 28px rgba(0,0,0,0.5); }
+    .leaderboard table { width: 100%; border-collapse: collapse; }
+    .leaderboard thead tr { background: #0f2348; }
+    .leaderboard th { padding: 12px 14px; color: #c8a96e; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; font-weight: normal; }
+    .leaderboard th.left { text-align: left; }
+    .leaderboard td { padding: 15px 14px; text-align: center; border-bottom: 1px solid #132040; font-size: 0.92rem; transition: background 0.15s; }
+    .leaderboard td.left { text-align: left; }
+    .leaderboard tbody tr:last-child td { border-bottom: none; }
+    .leaderboard tbody tr:hover td { background: #102040; }
+    .rank-1 td { background: rgba(200,169,110,0.12); }
+    .rank-2 td { background: rgba(192,192,192,0.06); }
+    .rank-3 td { background: rgba(180,130,80,0.07); }
+    .rank-1:hover td { background: rgba(200,169,110,0.18) !important; }
+    .rank-num { font-weight: bold; width: 36px; }
+    .rank-1 .rank-num { color: #c8a96e; }
+    .rank-2 .rank-num { color: #b0b8c8; }
+    .rank-3 .rank-num { color: #b48250; }
+    .team-name { font-weight: bold; font-size: 1rem; }
+    .td-total { font-weight: bold; font-size: 1.05rem; color: #c8a96e; }
+    .under { color: #c8a96e; }
+    .over  { color: #e86060; }
+    .even  { color: #e8edf5; }
+    .dash  { color: #2a3f5a; }
+    .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+    .card { background: #0e1e38; border: 1px solid #1a2e4a; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 14px rgba(0,0,0,0.35); }
+    .card-header { background: #0f2348; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2e4a; }
+    .card-name { font-size: 1.05rem; font-weight: bold; color: #c8a96e; }
+    .card-rank { font-size: 0.75rem; color: #7a9bbf; }
+    .card-total { font-size: 1.25rem; font-weight: bold; color: #c8a96e; }
+    .player-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 16px; border-bottom: 1px solid #0e1e38; gap: 8px; }
+    .player-row:last-child { border-bottom: none; }
+    .player-row.is-cut { opacity: 0.55; }
+    .player-name { font-size: 0.87rem; color: #8aaac8; flex: 1; }
+    .player-pos { font-size: 0.78rem; width: 42px; text-align: center; }
+    .player-score { font-size: 0.78rem; width: 34px; text-align: center; }
+    .pill-cut { padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; background: #2a1a1a; border: 1px solid #5a2a2a; color: #a04040; }
+    .player-pts { font-weight: bold; font-size: 0.88rem; width: 44px; text-align: right; color: #c8a96e; }
+    footer { text-align: center; padding: 20px; color: #2a3f5a; font-size: 0.75rem; }
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.3rem; letter-spacing: 2px; }
+      .leaderboard th, .leaderboard td { padding: 11px 8px; font-size: 0.8rem; }
+      .teams-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="trophy">🏆</div>
+  <h1><span>The Open</span> 2026</h1>
+  <div class="subtitle">Royal Birkdale &nbsp;·&nbsp; Settlers Run Draft Competition</div>
+  <div class="round-badge" id="round-badge">Loading...</div>
+</header>
+
+<div class="container">
+  <div class="last-updated" id="last-updated"></div>
+
+  <div class="section-title">Team Leaderboard</div>
+  <div class="leaderboard">
+    <table>
+      <thead>
+        <tr>
+          <th class="left">Pos</th>
+          <th class="left">Team</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Player Breakdown</div>
+  <div class="teams-grid" id="teams-grid"></div>
+</div>
+
+<footer>The Open Championship 2026 &nbsp;·&nbsp; Royal Birkdale &nbsp;·&nbsp; 16&ndash;19 July</footer>
+
+<script>
+// ================================================================
+//  SCORING MODEL — Fixed band table, published-position ties
+//
+//  Points come straight from BANDS below, keyed off the officially
+//  published leaderboard position. Ties are NOT split/averaged —
+//  a tournament leaderboard already skips positions to account for
+//  ties (e.g. two players tied for 2nd are both "T2", and the next
+//  player down is "T4", not "3rd"). So every tied player just gets
+//  that band's full point value — read the position straight off
+//  the leaderboard, no extra math.
+//
+//  Missed cut / withdrawn / disqualified all score a flat PENALTY,
+//  regardless of position.
+// ================================================================
+
+const CURRENT_ROUND = 0; // 0 = not started, 1-4 = round in progress, 4 = final
+
+// Position bands — first band where pos <= max applies.
+const BANDS = [
+  { max: 1,        pts: 50 },  // 1st
+  { max: 2,        pts: 40 },  // 2nd
+  { max: 3,        pts: 34 },  // 3rd
+  { max: 4,        pts: 30 },  // 4th
+  { max: 5,        pts: 27 },  // 5th
+  { max: 10,       pts: 22 },  // T6-T10
+  { max: 15,       pts: 17 },  // T11-T15
+  { max: 20,       pts: 13 },  // T16-T20
+  { max: 25,       pts: 10 },  // T21-T25
+  { max: 30,       pts: 8 },   // T26-T30
+  { max: 40,       pts: 6 },   // T31-T40
+  { max: 50,       pts: 4 },   // T41-T50
+  { max: 65,       pts: 2 },   // T51-T65
+  { max: Infinity, pts: 1 },   // T66+ (made cut)
+];
+
+// Flat penalty for missed cut / withdrawn / disqualified.
+const PENALTY = -5;
+
+// ================================================================
+//  TEAMS DATA — fill in after the draft.
+//  Each player: { name, pos: <int|null>, tied: <bool>, status: <null|"MC"|"WD"|"DQ"> }
+//    pos    = officially published leaderboard position (the number after
+//             any "T" — e.g. "T4" -> 4). null = no data yet.
+//    tied   = true if the published position has a "T" prefix — display only,
+//             does not affect points.
+//    status = null while active; "MC"/"WD"/"DQ" once applicable (pos then ignored)
+// ================================================================
+
+const TEAMS = {
+  "Sergio": [
+    { name: "R. McIlroy",     pos: null, tied: false, status: null },
+    { name: "M.W. Lee",       pos: null, tied: false, status: null },
+    { name: "S. Burns",       pos: null, tied: false, status: null },
+    { name: "B. Griffin",     pos: null, tied: false, status: null },
+    { name: "A. Noren",       pos: null, tied: false, status: null },
+  ],
+  "Buff": [
+    { name: "S. Scheffler",   pos: null, tied: false, status: null },
+    { name: "L. Aberg",       pos: null, tied: false, status: null },
+    { name: "T. Kim",         pos: null, tied: false, status: null },
+    { name: "S. Lowry",       pos: null, tied: false, status: null },
+    { name: "B. Koepka",      pos: null, tied: false, status: null },
+  ],
+  "Pete": [
+    { name: "M. Fitzpatrick", pos: null, tied: false, status: null },
+    { name: "C. Morikawa",    pos: null, tied: false, status: null },
+    { name: "J. Niemann",     pos: null, tied: false, status: null },
+    { name: "A. Fitzpatrick", pos: null, tied: false, status: null },
+    { name: "A. Scott",       pos: null, tied: false, status: null },
+  ],
+  "Trav": [
+    { name: "X. Schauffele",  pos: null, tied: false, status: null },
+    { name: "C. Young",       pos: null, tied: false, status: null },
+    { name: "C. Conners",     pos: null, tied: false, status: null },
+    { name: "B. DeChambeau",  pos: null, tied: false, status: null },
+    { name: "C. Smith",       pos: null, tied: false, status: null },
+  ],
+  "Suren": [
+    { name: "J. Rahm",        pos: null, tied: false, status: null },
+    { name: "C. Gotterup",    pos: null, tied: false, status: null },
+    { name: "A. Rai",         pos: null, tied: false, status: null },
+    { name: "J. Thomas",      pos: null, tied: false, status: null },
+    { name: "L. Herbert",     pos: null, tied: false, status: null },
+  ],
+  "Jonesy": [
+    { name: "P. Reed",        pos: null, tied: false, status: null },
+    { name: "W. Clark",       pos: null, tied: false, status: null },
+    { name: "J. Rose",        pos: null, tied: false, status: null },
+    { name: "J. Spieth",      pos: null, tied: false, status: null },
+    { name: "E. Chacarra",    pos: null, tied: false, status: null },
+  ],
+  "Mick": [
+    { name: "T. Fleetwood",   pos: null, tied: false, status: null },
+    { name: "T. Hatton",      pos: null, tied: false, status: null },
+    { name: "R. Henley",      pos: null, tied: false, status: null },
+    { name: "N. Hojgaard",    pos: null, tied: false, status: null },
+    { name: "H. English",     pos: null, tied: false, status: null },
+  ],
+  "Heath": [
+    { name: "R. MacIntyre",   pos: null, tied: false, status: null },
+    { name: "V. Hovland",     pos: null, tied: false, status: null },
+    { name: "S.W. Kim",       pos: null, tied: false, status: null },
+    { name: "H. Matsuyama",   pos: null, tied: false, status: null },
+    { name: "P. Cantlay",     pos: null, tied: false, status: null },
+  ],
+};
+
+// ================================================================
+//  HELPERS
+// ================================================================
+
+function pointsForPosition(pos) {
+  if (pos === null) return 0;
+  const band = BANDS.find(b => pos <= b.max);
+  return band ? band.pts : 0;
+}
+
+function playerPoints(player) {
+  if (player.status) return PENALTY;
+  return pointsForPosition(player.pos);
+}
+
+function playerHasData(player) {
+  return !!player.status || player.pos !== null;
+}
+
+function fmtPos(player) {
+  if (player.status) return { text: player.status, cls: "over" };
+  if (player.pos === null) return { text: "–", cls: "dash" };
+  const label = player.tied ? `T${player.pos}` : `${player.pos}`;
+  return { text: label, cls: "even" };
+}
+
+function fmtPts(val) {
+  const rounded = Math.round(val * 10) / 10;
+  if (rounded === 0) return { text: "0", cls: "dash" };
+  if (rounded < 0) return { text: rounded.toString(), cls: "over" };
+  return { text: rounded.toString(), cls: "under" };
+}
+
+function teamTotal(players) {
+  return players.reduce((sum, p) => sum + playerPoints(p), 0);
+}
+
+function hasAnyData(players) {
+  return players.some(playerHasData);
+}
+
+// ================================================================
+//  LEADERBOARD
+// ================================================================
+
+function buildLeaderboard() {
+  const entries = Object.entries(TEAMS).map(([name, players]) => ({
+    name, players,
+    total: teamTotal(players),
+    played: hasAnyData(players),
+  }));
+
+  entries.sort((a, b) => {
+    if (!a.played && !b.played) return 0;
+    if (!a.played) return 1;
+    if (!b.played) return -1;
+    return b.total - a.total;
+  });
+
+  const tbody = document.getElementById("leaderboard-body");
+  tbody.innerHTML = "";
+  entries.forEach((e, i) => {
+    const rank = i + 1;
+    const tr = document.createElement("tr");
+    if (rank <= 3 && e.played) tr.classList.add(`rank-${rank}`);
+    const total = e.played ? fmtPts(e.total) : { text: "–", cls: "dash" };
+    tr.innerHTML = `
+      <td class="left rank-num">${e.played ? rank : "–"}</td>
+      <td class="left team-name">${e.name}</td>
+      <td class="td-total ${total.cls}">${total.text}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  return entries;
+}
+
+// ================================================================
+//  PLAYER CARDS
+// ================================================================
+
+function buildCards(entries) {
+  const grid = document.getElementById("teams-grid");
+  grid.innerHTML = "";
+  entries.forEach((e, i) => {
+    const rank = e.played ? `#${i + 1}` : "–";
+    const totalFmt = e.played ? fmtPts(e.total) : { text: "–", cls: "dash" };
+    const card = document.createElement("div");
+    card.className = "card";
+    const playerRows = e.players.map(p => {
+      const posFmt = fmtPos(p);
+      const ptsFmt = playerHasData(p) ? fmtPts(playerPoints(p)) : { text: "–", cls: "dash" };
+      return `
+        <div class="player-row${p.status ? ' is-cut' : ''}">
+          <span class="player-name">${p.name}</span>
+          <span class="player-pos ${posFmt.cls}">${posFmt.text}</span>
+          <span class="player-pts ${ptsFmt.cls}">${ptsFmt.text}</span>
+        </div>`;
+    }).join("");
+    card.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-name">${e.name}</div>
+          <div class="card-rank">Position: ${rank}</div>
+        </div>
+        <div class="card-total ${totalFmt.cls}">${totalFmt.text}</div>
+      </div>
+      ${playerRows}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ================================================================
+//  RENDER
+// ================================================================
+
+function roundLabel() {
+  if (CURRENT_ROUND === 0) return "Tournament Not Started";
+  if (CURRENT_ROUND === 4) return "Final Round";
+  return `Round ${CURRENT_ROUND} In Progress`;
+}
+
+function render() {
+  document.getElementById("round-badge").textContent = roundLabel();
+  document.getElementById("last-updated").textContent =
+    "Page loaded: " + new Date().toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+  const entries = buildLeaderboard();
+  buildCards(entries);
+}
+
+render();
+setInterval(() => location.reload(), 5 * 60 * 1000);
+</script>
+</body>
+</html>
