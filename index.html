@@ -110,7 +110,7 @@
 //  regardless of position.
 // ================================================================
 
-const CURRENT_ROUND = 1; // 0 = not started, 1-4 = round in progress, 4 = final
+const CURRENT_ROUND = 2; // 0 = not started, 1-4 = round in progress, 4 = final
 
 // Position bands — first band where pos <= max applies.
 const BANDS = [
@@ -145,60 +145,60 @@ const PENALTY = -5;
 
 const TEAMS = {
   "Sergio": [
-    { name: "R. McIlroy",     pos: 85,  tied: true, status: null },
-    { name: "M.W. Lee",       pos: 39,  tied: true, status: null },
-    { name: "S. Burns",       pos: 107, tied: true, status: null },
-    { name: "B. Griffin",     pos: 24,  tied: true, status: null },
-    { name: "A. Noren",       pos: 60,  tied: true, status: null },
+    { name: "R. McIlroy",     pos: 38, tied: true,  status: null },
+    { name: "M.W. Lee",       pos: 67, tied: true,  status: null },
+    { name: "S. Burns",       pos: 5,  tied: true,  status: null },
+    { name: "B. Griffin",     pos: 38, tied: true,  status: null },
+    { name: "A. Noren",       pos: 52, tied: true,  status: null },
   ],
   "Buff": [
-    { name: "S. Scheffler",   pos: 13,  tied: true, status: null },
-    { name: "L. Aberg",       pos: 60,  tied: true, status: null },
-    { name: "T. Kim",         pos: 39,  tied: true, status: null },
-    { name: "S. Lowry",       pos: 24,  tied: true, status: null },
-    { name: "B. Koepka",      pos: 39,  tied: true, status: null },
+    { name: "S. Scheffler",   pos: 8,  tied: true,  status: null },
+    { name: "L. Aberg",       pos: 17, tied: true,  status: null },
+    { name: "T. Kim",         pos: null, tied: false, status: "MC" },
+    { name: "S. Lowry",       pos: 17, tied: true,  status: null },
+    { name: "B. Koepka",      pos: 67, tied: true,  status: null },
   ],
   "Pete": [
-    { name: "M. Fitzpatrick", pos: 85,  tied: true, status: null },
-    { name: "C. Morikawa",    pos: 13,  tied: true, status: null },
-    { name: "J. Niemann",     pos: 142, tied: true, status: null },
-    { name: "A. Fitzpatrick", pos: 24,  tied: true, status: null },
-    { name: "A. Scott",       pos: 85,  tied: true, status: null },
+    { name: "M. Fitzpatrick", pos: null, tied: false, status: "MC" },
+    { name: "C. Morikawa",    pos: 25, tied: true,  status: null },
+    { name: "J. Niemann",     pos: null, tied: false, status: "MC" },
+    { name: "A. Fitzpatrick", pos: 8,  tied: true,  status: null },
+    { name: "A. Scott",       pos: 25, tied: true,  status: null },
   ],
   "Trav": [
-    { name: "X. Schauffele",  pos: 60,  tied: true, status: null },
-    { name: "C. Young",       pos: 4,   tied: true, status: null },
-    { name: "C. Conners",     pos: 60,  tied: true, status: null },
-    { name: "B. DeChambeau",  pos: 4,   tied: true, status: null },
-    { name: "C. Smith",       pos: 107, tied: true, status: null },
+    { name: "X. Schauffele",  pos: 52, tied: true,  status: null },
+    { name: "C. Young",       pos: 2,  tied: true,  status: null },
+    { name: "C. Conners",     pos: 25, tied: true,  status: null },
+    { name: "B. DeChambeau",  pos: 5,  tied: true,  status: null },
+    { name: "C. Smith",       pos: null, tied: false, status: "MC" },
   ],
   "Suren": [
-    { name: "J. Rahm",        pos: 24,  tied: true, status: null },
-    { name: "C. Gotterup",    pos: 39,  tied: true, status: null },
-    { name: "A. Rai",         pos: 60,  tied: true, status: null },
-    { name: "J. Thomas",      pos: 39,  tied: true, status: null },
-    { name: "L. Herbert",     pos: 39,  tied: true, status: null },
+    { name: "J. Rahm",        pos: 8,  tied: true,  status: null },
+    { name: "C. Gotterup",    pos: 25, tied: true,  status: null },
+    { name: "A. Rai",         pos: null, tied: false, status: "MC" },
+    { name: "J. Thomas",      pos: 38, tied: true,  status: null },
+    { name: "L. Herbert",     pos: 1,  tied: false, status: null },
   ],
   "Jonesy": [
-    { name: "P. Reed",        pos: 85,  tied: true, status: null },
-    { name: "W. Clark",       pos: 107, tied: true, status: null },
-    { name: "J. Rose",        pos: 135, tied: true, status: null },
-    { name: "J. Spieth",      pos: 107, tied: true, status: null },
-    { name: "E. Chacarra",    pos: 39,  tied: true, status: null },
+    { name: "P. Reed",        pos: 25, tied: true,  status: null },
+    { name: "W. Clark",       pos: null, tied: false, status: "MC" },
+    { name: "J. Rose",        pos: null, tied: false, status: "MC" },
+    { name: "J. Spieth",      pos: null, tied: false, status: "MC" },
+    { name: "E. Chacarra",    pos: 52, tied: true,  status: null },
   ],
   "Mick": [
-    { name: "T. Fleetwood",   pos: 24,  tied: true, status: null },
-    { name: "T. Hatton",      pos: 24,  tied: true, status: null },
-    { name: "R. Henley",      pos: 39,  tied: true, status: null },
-    { name: "N. Hojgaard",    pos: 85,  tied: true, status: null },
-    { name: "H. English",     pos: 107, tied: true, status: null },
+    { name: "T. Fleetwood",   pos: 8,  tied: true,  status: null },
+    { name: "T. Hatton",      pos: 17, tied: true,  status: null },
+    { name: "R. Henley",      pos: 67, tied: true,  status: null },
+    { name: "N. Hojgaard",    pos: null, tied: false, status: "MC" },
+    { name: "H. English",     pos: null, tied: false, status: "MC" },
   ],
   "Heath": [
-    { name: "R. MacIntyre",   pos: 4,   tied: true, status: null },
-    { name: "V. Hovland",     pos: 39,  tied: true, status: null },
-    { name: "S.W. Kim",       pos: 13,  tied: true, status: null },
-    { name: "H. Matsuyama",   pos: 85,  tied: true, status: null },
-    { name: "P. Cantlay",     pos: 60,  tied: true, status: null },
+    { name: "R. MacIntyre",   pos: 8,  tied: true,  status: null },
+    { name: "V. Hovland",     pos: null, tied: false, status: "MC" },
+    { name: "S.W. Kim",       pos: 5,  tied: true,  status: null },
+    { name: "H. Matsuyama",   pos: 38, tied: true,  status: null },
+    { name: "P. Cantlay",     pos: 38, tied: true,  status: null },
   ],
 };
 
